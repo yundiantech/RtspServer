@@ -11,8 +11,8 @@ static const int epollTimeout = 10000;
 
 EPollPoller* EPollPoller::createNew()
 {
-    //return new EPollPoller();
-    return New<EPollPoller>::allocate();
+    return new EPollPoller();
+    // return New<EPollPoller>::allocate();
 }
 
 EPollPoller::EPollPoller() :

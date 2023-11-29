@@ -11,8 +11,8 @@
 
 AACFileMeidaSource* AACFileMeidaSource::createNew(UsageEnvironment* env, std::string file)
 {
-    //return new AACFileMeidaSource(env, file);
-    return New<AACFileMeidaSource>::allocate(env, file);
+    return new AACFileMeidaSource(env, file);
+    // return New<AACFileMeidaSource>::allocate(env, file);
 }
 
 AACFileMeidaSource::AACFileMeidaSource(UsageEnvironment* env, const std::string& file) :

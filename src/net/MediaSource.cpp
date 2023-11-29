@@ -14,8 +14,8 @@ MediaSource::MediaSource(UsageEnvironment* env) :
 
 MediaSource::~MediaSource()
 {
-    //delete mMutex;
-    Delete::release(mMutex);
+    delete mMutex;
+    // Delete::release(mMutex);
 }
 
 AVFrame* MediaSource::getFrame()

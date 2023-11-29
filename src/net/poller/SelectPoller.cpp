@@ -6,8 +6,8 @@ static const int selectTimeout = 10000;
 
 SelectPoller* SelectPoller::createNew()
 {
-    //return new SelectPoller();
-    return New<SelectPoller>::allocate();
+    return new SelectPoller();
+    // return New<SelectPoller>::allocate();
 }
 
 SelectPoller::SelectPoller()

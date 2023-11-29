@@ -11,8 +11,8 @@
 
 MediaSession* MediaSession::createNew(std::string sessionName)
 {
-    //return new MediaSession(sessionName);
-    return New<MediaSession>::allocate(sessionName);
+    return new MediaSession(sessionName);
+    // return New<MediaSession>::allocate(sessionName);
 }
 
 MediaSession::MediaSession(const std::string& sessionName) :
@@ -38,13 +38,13 @@ MediaSession::~MediaSession()
         if(mMulticastRtpInstances[i])
         {
             this->removeRtpInstance(mMulticastRtpInstances[i]);
-            //delete mMulticastRtpInstances[i];
-            Delete::release(mMulticastRtpInstances[i]);
+            delete mMulticastRtpInstances[i];
+            // Delete::release(mMulticastRtpInstances[i]);
         }
 
         if(mMulticastRtcpInstances[i])
-            Delete::release(mMulticastRtcpInstances[i]);
-            //delete mMulticastRtcpInstances[i];
+            // Delete::release(mMulticastRtcpInstances[i]);
+            delete mMulticastRtcpInstances[i];
     }
 }
 
@@ -123,7 +123,12 @@ bool MediaSession::addRtpSink(MediaSession::TrackId trackId, RtpSink* rtpSink)
     track->mRtpSink = rtpSink;
     track->mIsAlive = true;
 
-    rtpSink->setSendFrameCallback(sendPacketCallback, this, track);
+    std::function<void (RtpPacket*)> sendFrameFunc = [=](RtpPacket* rtpPacket)
+    {
+        this->sendPacket(track, rtpPacket);
+    };
+
+    rtpSink->setSendFrameCallbackFunc(sendFrameFunc);
 
     return true;
 }
@@ -157,14 +162,6 @@ bool MediaSession::removeRtpInstance(RtpInstance* rtpInstance)
     }
 
     return false;
-}
-
-void MediaSession::sendPacketCallback(void* arg1, void* arg2, RtpPacket* rtpPacket)
-{
-    MediaSession* mediaSession = (MediaSession*)arg1;
-    MediaSession::Track* track = (MediaSession::Track*)arg2;
-    
-    mediaSession->sendPacket(track, rtpPacket);
 }
 
 void MediaSession::sendPacket(MediaSession::Track* track, RtpPacket* rtpPacket)

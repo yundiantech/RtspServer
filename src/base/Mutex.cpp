@@ -3,8 +3,8 @@
 
 Mutex* Mutex::createNew()
 {
-    //return new Mutex();
-    return New<Mutex>::allocate();
+    return new Mutex();
+    // return New<Mutex>::allocate();
 }
 
 Mutex::Mutex()

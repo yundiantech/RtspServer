@@ -23,8 +23,8 @@ TcpConnection::TcpConnection(UsageEnvironment* env, int sockfd) :
 TcpConnection::~TcpConnection()
 {
     mEnv->scheduler()->removeIOEvent(mTcpConnIOEvent);
-    //delete mTcpConnIOEvent;
-    Delete::release(mTcpConnIOEvent);
+    delete mTcpConnIOEvent;
+    // Delete::release(mTcpConnIOEvent);
 }
 
 void TcpConnection::setDisconnectionCallback(DisconnectionCallback cb, void* arg)
@@ -90,7 +90,7 @@ void TcpConnection::disableErrorHandling()
 void TcpConnection::handleRead()
 {
     int ret = mInputBuffer.read(mSocket.fd());
-
+    
     if(ret == 0)
     {
         LOG_DEBUG("client disconnect\n");
@@ -102,7 +102,7 @@ void TcpConnection::handleRead()
         LOG_ERROR("read err\n");
         handleDisconnection();
         return;
-    }
+    } 
 
     /* 先取消读 */
     //this->disableReadeHandling();

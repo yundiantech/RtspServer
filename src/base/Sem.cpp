@@ -3,8 +3,8 @@
 
 Sem* Sem::createNew(int val)
 {
-    //return new Sem(val);
-    return New<Sem>::allocate(val);
+    return new Sem(val);
+    // return New<Sem>::allocate(val);
 }
 
 Sem::Sem(int val)

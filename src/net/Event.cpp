@@ -5,14 +5,14 @@
 
 TriggerEvent* TriggerEvent::createNew(void* arg)
 {
-    //return new TriggerEvent(arg);
-    return New<TriggerEvent>::allocate(arg);
+    return new TriggerEvent(arg);
+    // return New<TriggerEvent>::allocate(arg);
 }
 
 TriggerEvent* TriggerEvent::createNew()
 {
-    //return new TriggerEvent(NULL);
-    return New<TriggerEvent>::allocate((void*)0);
+    return new TriggerEvent(NULL);
+    // return New<TriggerEvent>::allocate((void*)0);
 }
 
 TriggerEvent::TriggerEvent(void* arg) :
@@ -29,14 +29,14 @@ void TriggerEvent::handleEvent()
 
 TimerEvent* TimerEvent::createNew(void* arg)
 {
-    //return new TimerEvent(arg);
-    return New<TimerEvent>::allocate(arg);
+    return new TimerEvent(arg);
+    // return New<TimerEvent>::allocate(arg);
 }
 
 TimerEvent* TimerEvent::createNew()
 {
-    //return new TimerEvent(NULL);
-    return New<TimerEvent>::allocate((void*)0);
+    return new TimerEvent(NULL);
+    // return New<TimerEvent>::allocate((void*)0);
 }
 
 TimerEvent::TimerEvent(void* arg) :
@@ -56,8 +56,8 @@ IOEvent* IOEvent::createNew(int fd, void* arg)
     if(fd < 0)
         return NULL;
 
-    //return new IOEvent(fd, arg);
-    return New<IOEvent>::allocate(fd, arg);
+    return new IOEvent(fd, arg);
+    // return New<IOEvent>::allocate(fd, arg);
 }
 
 IOEvent* IOEvent::createNew(int fd)
@@ -65,8 +65,8 @@ IOEvent* IOEvent::createNew(int fd)
     if(fd < 0)
         return NULL;
     
-    //return new IOEvent(fd, NULL);
-    return New<IOEvent>::allocate(fd, (void*)0);
+    return new IOEvent(fd, NULL);
+    // return New<IOEvent>::allocate(fd, (void*)0);
 }
 
 IOEvent::IOEvent(int fd, void* arg) :

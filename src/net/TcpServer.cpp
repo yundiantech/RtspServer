@@ -15,8 +15,8 @@ TcpServer::TcpServer(UsageEnvironment* env, const Ipv4Address& addr) :
 
 TcpServer::~TcpServer()
 {
-    //delete mAcceptor;
-    Delete::release(mAcceptor);
+    delete mAcceptor;
+    // Delete::release(mAcceptor);
 }
 
 void TcpServer::start()

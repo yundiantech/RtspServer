@@ -8,8 +8,8 @@ UsageEnvironment* UsageEnvironment::createNew(EventScheduler* scheduler, ThreadP
     if(!scheduler)
         return NULL;
     
-    //return new UsageEnvironment(scheduler, threadPool);
-    return New<UsageEnvironment>::allocate(scheduler, threadPool);
+    return new UsageEnvironment(scheduler, threadPool);
+    // return New<UsageEnvironment>::allocate(scheduler, threadPool);
 }
 
 UsageEnvironment::UsageEnvironment(EventScheduler* scheduler, ThreadPool* threadPool) :

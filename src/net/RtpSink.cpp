@@ -6,7 +6,6 @@
 
 RtpSink::RtpSink(UsageEnvironment* env, MediaSource* mediaSource, int payloadType) :
     mMediaSource(mediaSource),
-    mSendPacketCallback(NULL),
     mEnv(env),
     mCsrcLen(0),
     mExtension(0),
@@ -28,15 +27,8 @@ RtpSink::RtpSink(UsageEnvironment* env, MediaSource* mediaSource, int payloadTyp
 RtpSink::~RtpSink()
 {
     mEnv->scheduler()->removeTimedEvent(mTimerId);
-    //delete mTimerEvent;
-    Delete::release(mTimerEvent);
-}
-
-void RtpSink::setSendFrameCallback(SendPacketCallback cb, void* arg1, void* arg2)
-{
-    mSendPacketCallback = cb;
-    mArg1 = arg1;
-    mArg2 = arg2;
+    delete mTimerEvent;
+    // Delete::release(mTimerEvent);
 }
 
 void RtpSink::sendRtpPacket(RtpPacket* packet)
@@ -52,9 +44,12 @@ void RtpSink::sendRtpPacket(RtpPacket* packet)
     rtpHead->timestamp = htonl(mTimestamp);
     rtpHead->ssrc = htonl(mSSRC);
     packet->mSize += RTP_HEADER_SIZE;
-    
-    if(mSendPacketCallback)
-        mSendPacketCallback(mArg1, mArg2, packet);
+     
+    if(m_sendframe_callback_func)
+    {
+        m_sendframe_callback_func(packet);
+    }
+        
 }
 
 void RtpSink::timeoutCallback(void* arg)
@@ -62,10 +57,10 @@ void RtpSink::timeoutCallback(void* arg)
     RtpSink* rtpSink = (RtpSink*)arg;
 
     rtpSink->mMediaSource->readFrame(); //从文件读取流
-    
+
     AVFrame* frame = rtpSink->mMediaSource->getFrame();
     if(!frame)
-    {
+    { 
         return;
     }
 

@@ -6,8 +6,8 @@
 
 Condition* Condition::createNew()
 {
-    //return new Condition();
-    return New<Condition>::allocate();
+    return new Condition();
+    // return New<Condition>::allocate();
 }
 
 Condition::Condition()

@@ -8,8 +8,8 @@
 
 AACRtpSink* AACRtpSink::createNew(UsageEnvironment* env, MediaSource* mediaSource)
 {
-    //return new AACRtpSink(env, mediaSource, RTP_PAYLOAD_TYPE_AAC);
-    return New<AACRtpSink>::allocate(env, mediaSource, RTP_PAYLOAD_TYPE_AAC);
+    return new AACRtpSink(env, mediaSource, RTP_PAYLOAD_TYPE_AAC);
+    // return New<AACRtpSink>::allocate(env, mediaSource, RTP_PAYLOAD_TYPE_AAC);
 }
 
 AACRtpSink::AACRtpSink(UsageEnvironment* env, MediaSource* mediaSource, int payloadType) :

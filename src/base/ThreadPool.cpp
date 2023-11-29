@@ -4,8 +4,8 @@
 
 ThreadPool* ThreadPool::createNew(int num)
 {
-    //return new ThreadPool(num);
-    return New<ThreadPool>::allocate(num);
+    return new ThreadPool(num);
+    // return New<ThreadPool>::allocate(num);
 }
 
 ThreadPool::ThreadPool(int num) :
@@ -21,10 +21,10 @@ ThreadPool::ThreadPool(int num) :
 ThreadPool::~ThreadPool()
 {
     cancelThreads();
-    //delete mMutex;
-    //delete mCondition;
-    Delete::release(mMutex);
-    Delete::release(mCondition);
+    delete mMutex;
+    delete mCondition;
+    // Delete::release(mMutex);
+    // Delete::release(mCondition);
 }
 
 void ThreadPool::addTask(ThreadPool::Task& task)

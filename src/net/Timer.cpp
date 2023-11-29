@@ -68,8 +68,8 @@ TimerManager* TimerManager::createNew(Poller* poller)
         return NULL;
     }
 
-    //return new TimerManager(timerFd, poller);
-    return New<TimerManager>::allocate(timerFd, poller);
+    return new TimerManager(timerFd, poller);
+    // return New<TimerManager>::allocate(timerFd, poller);
 }
 
 TimerManager::TimerManager(int timerFd, Poller* poller) :
@@ -87,8 +87,8 @@ TimerManager::TimerManager(int timerFd, Poller* poller) :
 TimerManager::~TimerManager()
 {
     mPoller->removeIOEvent(mTimerIOEvent);
-    //delete mTimerIOEvent;
-    Delete::release(mTimerIOEvent);
+    delete mTimerIOEvent;
+    // Delete::release(mTimerIOEvent);
 }
 
 Timer::TimerId TimerManager::addTimer(TimerEvent* event, Timer::Timestamp timestamp,

@@ -10,8 +10,8 @@ H264RtpSink* H264RtpSink::createNew(UsageEnvironment* env, MediaSource* mediaSou
     if(!mediaSource)
         return NULL;
 
-    //return new H264RtpSink(env, mediaSource);
-    return New<H264RtpSink>::allocate(env, mediaSource);
+    return new H264RtpSink(env, mediaSource);
+    // return New<H264RtpSink>::allocate(env, mediaSource);
 }
 
 H264RtpSink::H264RtpSink(UsageEnvironment* env, MediaSource* mediaSource) :

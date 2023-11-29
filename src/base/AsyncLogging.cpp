@@ -18,7 +18,7 @@ AsyncLogging::AsyncLogging(std::string file) :
     assert(mCond);
 
     mFp = fopen(mFile.c_str(), "w");
-    assert(mFp >= 0);
+    // assert(mFp >= 0);
 
     for(int i = 0; i < BUFFER_NUM; ++i)
         mFreeBuffer.push(&mBuffer[i]);

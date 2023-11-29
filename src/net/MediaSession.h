@@ -44,7 +44,6 @@ private:
     };
 
     Track* getTrack(MediaSession::TrackId trackId);
-    static void sendPacketCallback(void* arg1, void* arg2, RtpPacket* rtpPacket);
     void sendPacket(MediaSession::Track* tarck, RtpPacket* rtpPacket);
 
 private:

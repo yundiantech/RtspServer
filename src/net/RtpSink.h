@@ -2,6 +2,7 @@
 #define _MEDIA_SINK_H_
 #include <string>
 #include <stdint.h>
+#include <functional>
 
 #include "net/MediaSource.h"
 #include "net/Event.h"
@@ -12,15 +13,13 @@
 class RtpSink
 {
 public:
-    typedef void (*SendPacketCallback)(void* arg1, void* arg2, RtpPacket* mediaPacket);
-
     RtpSink(UsageEnvironment* env, MediaSource* mediaSource, int payloadType);
     virtual ~RtpSink();
 
     virtual std::string getMediaDescription(uint16_t port) = 0;
     virtual std::string getAttribute() = 0;
 
-    void setSendFrameCallback(SendPacketCallback cb, void* arg1, void* arg2);
+    void setSendFrameCallbackFunc(std::function<void (RtpPacket*)> func){m_sendframe_callback_func = func;}
 
 protected:
     virtual void handleFrame(AVFrame* frame) = 0;
@@ -34,9 +33,8 @@ private:
 protected:
     UsageEnvironment* mEnv;
     MediaSource* mMediaSource;
-    SendPacketCallback mSendPacketCallback;
-    void* mArg1;
-    void* mArg2;
+
+    std::function<void (RtpPacket*)> m_sendframe_callback_func = nullptr; //发送数据回调函数
 
     uint8_t mCsrcLen;
     uint8_t mExtension;

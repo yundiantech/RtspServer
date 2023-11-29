@@ -9,8 +9,8 @@ static const int pollTimeout = 10000;
 
 PollPoller* PollPoller::createNew()
 {
-    //return new PollPoller();
-    return New<PollPoller>::allocate();
+    return new PollPoller();
+    // return New<PollPoller>::allocate();
 }
 
 PollPoller::PollPoller()

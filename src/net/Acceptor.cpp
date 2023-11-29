@@ -5,8 +5,8 @@
 
 Acceptor* Acceptor::createNew(UsageEnvironment* env, const Ipv4Address& addr)
 {
-    //return new Acceptor(env, addr);
-    return New<Acceptor>::allocate(env, addr);
+    return new Acceptor(env, addr);
+    // return New<Acceptor>::allocate(env, addr);
 }
 
 Acceptor::Acceptor(UsageEnvironment* env, const Ipv4Address& addr) :
@@ -27,8 +27,8 @@ Acceptor::~Acceptor()
     if(mListenning)
         mEnv->scheduler()->removeIOEvent(mAcceptIOEvent);
 
-    //delete mAcceptIOEvent;
-    Delete::release(mAcceptIOEvent);
+    delete mAcceptIOEvent;
+    // Delete::release(mAcceptIOEvent);
 }
 
 void Acceptor::listen()

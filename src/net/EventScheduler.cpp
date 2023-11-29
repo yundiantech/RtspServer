@@ -30,8 +30,8 @@ EventScheduler* EventScheduler::createNew(PollerType type)
     if (evtFd < 0)
         return NULL;
 
-    //return new EventScheduler(type, evtFd);
-    return New<EventScheduler>::allocate(type, evtFd);
+    return new EventScheduler(type, evtFd);
+    // return New<EventScheduler>::allocate(type, evtFd);
 }
 
 EventScheduler::EventScheduler(PollerType type, int fd) :
@@ -72,13 +72,14 @@ EventScheduler::~EventScheduler()
     mPoller->removeIOEvent(mWakeIOEvent);
     ::close(mWakeupFd);
 
-    //delete mWakeIOEvent;
-    //delete mTimerManager;
-    //delete mPoller;
-    Delete::release(mWakeIOEvent);
-    Delete::release(mTimerManager);
-    Delete::release(mPoller);
-    Delete::release(mMutex);
+    delete mWakeIOEvent;
+    delete mTimerManager;
+    delete mPoller;
+    delete mMutex;
+    // Delete::release(mWakeIOEvent);
+    // Delete::release(mTimerManager);
+    // Delete::release(mPoller);
+    // Delete::release(mMutex);
 }
 
 bool EventScheduler::addTriggerEvent(TriggerEvent* event)

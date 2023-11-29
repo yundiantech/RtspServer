@@ -19,8 +19,8 @@ static void getPeerIp(int sockfd, std::string& ip)
 
 RtspConnection* RtspConnection::createNew(RtspServer* rtspServer, int sockfd)
 {
-    //return new RtspConnection(rtspServer, sockfd);
-    return New<RtspConnection>::allocate(rtspServer, sockfd);
+    return new RtspConnection(rtspServer, sockfd);
+    // return New<RtspConnection>::allocate(rtspServer, sockfd);
 }
 
 RtspConnection::RtspConnection(RtspServer* rtspServer, int sockfd) :
@@ -48,14 +48,16 @@ RtspConnection::~RtspConnection()
         {
             if(mSession)
                 mSession->removeRtpInstance(mRtpInstances[i]);
-            //delete mRtpInstances[i];
-            Delete::release(mRtpInstances[i]);
+            delete mRtpInstances[i];
+            // Delete::release(mRtpInstances[i]);
+            mRtpInstances[i] = NULL;
         }
 
         if(mRtcpInstances[i])
         {
-            //delete mRtcpInstances[i];
-            Delete::release(mRtcpInstances[i]);
+            delete mRtcpInstances[i];
+            // Delete::release(mRtcpInstances[i]);
+            mRtcpInstances[i] = NULL;
         }
     }
 }
@@ -513,7 +515,7 @@ bool RtspConnection::handleCmdPlay()
 
     return true;
 }
-
+ 
 bool RtspConnection::handleCmdTeardown()
 {
     snprintf((char*)mBuffer, sizeof(mBuffer),
@@ -532,7 +534,7 @@ bool RtspConnection::handleCmdTeardown()
 
 bool RtspConnection::handleCmdGetParamter()
 {
-    
+    return true;
 }
 
 int RtspConnection::sendMessage(void* buf, int size)
