@@ -21,14 +21,14 @@ public:
     static RtpInstance* createNewOverUdp(int localSockfd, uint16_t localPort,
                                     std::string destIp, uint16_t destPort)
     {
-        //return new RtpInstance(localSockfd, localPort, destIp, destPort);
-        return New<RtpInstance>::allocate(localSockfd, localPort, destIp, destPort);
+        return new RtpInstance(localSockfd, localPort, destIp, destPort);
+        // return New<RtpInstance>::allocate(localSockfd, localPort, destIp, destPort);
     }
 
     static RtpInstance* createNewOverTcp(int clientSockfd, uint8_t rtpChannel)
     {
-        //return new RtpInstance(clientSockfd, rtpChannel);
-        return New<RtpInstance>::allocate(clientSockfd, rtpChannel);
+        return new RtpInstance(clientSockfd, rtpChannel);
+        // return New<RtpInstance>::allocate(clientSockfd, rtpChannel);
     }
 
     ~RtpInstance()
@@ -57,7 +57,7 @@ public:
     }
 
     bool alive() const { return mIsAlive; }
-    int setAlive(bool alive) { mIsAlive = alive; };
+    void setAlive(bool alive) { mIsAlive = alive; };
     void setSessionId(uint16_t sessionId) { mSessionId = sessionId; }
     uint16_t sessionId() const { return mSessionId; }
 
@@ -103,8 +103,8 @@ public:
     static RtcpInstance* createNew(int localSockfd, uint16_t localPort,
                                     std::string destIp, uint16_t destPort)
     {
-        //return new RtcpInstance(localSockfd, localPort, destIp, destPort);
-        return New<RtcpInstance>::allocate(localSockfd, localPort, destIp, destPort);
+        return new RtcpInstance(localSockfd, localPort, destIp, destPort);
+        // return New<RtcpInstance>::allocate(localSockfd, localPort, destIp, destPort);
     }
 
     ~RtcpInstance()
@@ -125,7 +125,7 @@ public:
     uint16_t getLocalPort() const { return mLocalPort; }
 
     int alive() const { return mIsAlive; }
-    int setAlive(bool alive) { mIsAlive = alive; };
+    void setAlive(bool alive) { mIsAlive = alive; };
     void setSessionId(uint16_t sessionId) { mSessionId = sessionId; }
     uint16_t sessionId() const { return mSessionId; }
 
