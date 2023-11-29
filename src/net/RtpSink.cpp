@@ -60,6 +60,9 @@ void RtpSink::sendRtpPacket(RtpPacket* packet)
 void RtpSink::timeoutCallback(void* arg)
 {
     RtpSink* rtpSink = (RtpSink*)arg;
+
+    rtpSink->mMediaSource->readFrame(); //从文件读取流
+    
     AVFrame* frame = rtpSink->mMediaSource->getFrame();
     if(!frame)
     {

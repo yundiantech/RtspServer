@@ -36,9 +36,11 @@ public:
 
 protected:
     MediaSource(UsageEnvironment* env);
-    virtual void readFrame() = 0;
     void setFps(int fps) { mFps = fps; }
 
+public:
+    virtual void readFrame() = 0;
+    
 private:
     static void taskCallback(void*);
 
