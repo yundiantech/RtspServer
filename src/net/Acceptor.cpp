@@ -16,7 +16,7 @@ Acceptor::Acceptor(UsageEnvironment* env, const Ipv4Address& addr) :
     mNewConnectionCallback(NULL)
 {
     mSocket.setReuseAddr(1);
-    mSocket.bind(mAddr);
+    mPortBindSuccess = mSocket.bind(mAddr);
     mAcceptIOEvent = IOEvent::createNew(mSocket.fd(), this);
     mAcceptIOEvent->setReadCallback(readCallback);
     mAcceptIOEvent->enableReadHandling();

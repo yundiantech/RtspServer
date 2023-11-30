@@ -19,9 +19,14 @@ TcpServer::~TcpServer()
     // Delete::release(mAcceptor);
 }
 
-void TcpServer::start()
+bool TcpServer::start()
 {
-    mAcceptor->listen();
+    bool ret = mAcceptor->isBinded();
+    if (ret)
+    {
+        mAcceptor->listen();
+    }
+    return ret;
 }
 
 void TcpServer::newConnectionCallback(void* arg, int connfd)

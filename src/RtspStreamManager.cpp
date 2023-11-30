@@ -15,7 +15,7 @@ RtspStreamManager::~RtspStreamManager()
 
 }
 
-void RtspStreamManager::start_server()
+bool RtspStreamManager::start_server()
 {
     //Logger::setLogFile("xxx.log");
     Logger::setLogLevel(Logger::LogWarning);
@@ -37,11 +37,18 @@ void RtspStreamManager::start_server()
     //session->startMulticast(); //多播
  
     server->addMeidaSession(session);
-    server->start();
-
-    std::cout<<"Play the media using the URL \""<<server->getUrl(session)<<"\""<<std::endl;
-
-    env->scheduler()->loop();
+    bool ret = server->start();
+    if (ret)
+    {
+        std::cout<<"Play the media using the URL \""<<server->getUrl(session)<<"\""<<std::endl;
+        env->scheduler()->loop();
+    }
+    else
+    {
+        std::cout<<"start rtsp server failed!"<<std::endl;
+    }
+    
+    return ret;
 }
 
 void RtspStreamManager::inputFrame(VideoEncodedFramePtr videoFrame)

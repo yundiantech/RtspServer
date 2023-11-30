@@ -14,7 +14,7 @@ class TcpServer
 public:
     virtual ~TcpServer();
 
-    void start();
+    bool start();
 
 protected:
     TcpServer(UsageEnvironment* env, const Ipv4Address& addr);

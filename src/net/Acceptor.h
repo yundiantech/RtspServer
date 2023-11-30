@@ -15,6 +15,7 @@ public:
     Acceptor(UsageEnvironment* env, const Ipv4Address& addr);
     ~Acceptor();
 
+    bool isBinded(){return mPortBindSuccess;}
     bool listenning() const { return mListenning; }
     void listen();
     void setNewConnectionCallback(NewConnectionCallback cb, void* arg);
@@ -29,6 +30,7 @@ private:
     IOEvent* mAcceptIOEvent;
     TcpSocket mSocket;
     bool mListenning;
+    bool mPortBindSuccess = false; //端口是否绑定成功
     NewConnectionCallback mNewConnectionCallback;
     void* mArg;
 };
