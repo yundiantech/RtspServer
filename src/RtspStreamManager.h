@@ -22,9 +22,12 @@ public:
     RtspStreamManager();
     virtual ~RtspStreamManager();
 
-    void start_server();
+    bool start_server();
 
+    ///输入视频数据
     void inputFrame(VideoEncodedFramePtr videoFrame);
+
+    ///输入音频数据
     void inputFrame(AACFramePtr audioFrame);
 
 private:
