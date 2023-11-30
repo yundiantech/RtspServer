@@ -12,9 +12,8 @@
 #include "net/RtspServer.h"
 #include "net/MediaSession.h"
 #include "net/InetAddress.h"
-#include "net/H264FileMediaSource.h"
-#include "net/H265RtpSink.h"
-#include "net/AACFileMediaSource.h"
+#include "mediasource/H264FileMediaSource.h"
+#include "mediasource/AACFileMediaSource.h"
 #include "net/AACRtpSink.h"
 
 class RtspStreamManager
@@ -25,10 +24,12 @@ public:
 
     void start_server();
 
-    // void input_video_buffer(int stream_index);
-    // void input_audio_buffer(int stream_index);
+    void inputFrame(VideoEncodedFramePtr videoFrame);
+    void inputFrame(AACFramePtr audioFrame);
 
 private:
+    MediaSource* m_video_source = nullptr;
+    MediaSource* m_audio_source = nullptr;
 
 };
 

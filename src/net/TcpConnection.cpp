@@ -90,7 +90,7 @@ void TcpConnection::disableErrorHandling()
 void TcpConnection::handleRead()
 {
     int ret = mInputBuffer.read(mSocket.fd());
-    
+
     if(ret == 0)
     {
         LOG_DEBUG("client disconnect\n");

@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
     EventScheduler* scheduler = EventScheduler::createNew(EventScheduler::POLLER_SELECT);
     //EventScheduler* scheduler = EventScheduler::createNew(EventScheduler::POLLER_POLL);
     //EventScheduler* scheduler = EventScheduler::createNew(EventScheduler::POLLER_EPOLL);
-    UsageEnvironment* env = UsageEnvironment::createNew(scheduler, NULL);
+    UsageEnvironment* env = UsageEnvironment::createNew(scheduler);
 
     uint16_t port = 8554;
     Ipv4Address addr("0.0.0.0", port);

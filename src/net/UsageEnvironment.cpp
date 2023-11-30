@@ -3,18 +3,17 @@
 #include "net/UsageEnvironment.h"
 #include "base/New.h"
 
-UsageEnvironment* UsageEnvironment::createNew(EventScheduler* scheduler, ThreadPool* threadPool)
+UsageEnvironment* UsageEnvironment::createNew(EventScheduler* scheduler)
 {
     if(!scheduler)
         return NULL;
     
-    return new UsageEnvironment(scheduler, threadPool);
+    return new UsageEnvironment(scheduler);
     // return New<UsageEnvironment>::allocate(scheduler, threadPool);
 }
 
-UsageEnvironment::UsageEnvironment(EventScheduler* scheduler, ThreadPool* threadPool) :
-    mScheduler(scheduler),
-    mThreadPool(threadPool)
+UsageEnvironment::UsageEnvironment(EventScheduler* scheduler) :
+    mScheduler(scheduler)
 {
 
 }
@@ -27,9 +26,4 @@ UsageEnvironment::~UsageEnvironment()
 EventScheduler* UsageEnvironment::scheduler()
 {
     return mScheduler;
-}
-
-ThreadPool* UsageEnvironment::threadPool()
-{
-    return mThreadPool;
 }

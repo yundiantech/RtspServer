@@ -394,6 +394,8 @@ bool RtspConnection::handleCmdDescribe()
             (unsigned int)sdp.size(),
             sdp.c_str());
 
+printf("%s line=%d sdp=%s \n", __FUNCTION__, __LINE__, mBuffer);
+
     if(sendMessage(mBuffer, strlen(mBuffer)) < 0)
             return false;
 

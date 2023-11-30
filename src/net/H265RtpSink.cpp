@@ -52,18 +52,23 @@ void H265RtpSink::handleFrame(AVFrame* frame)
 {
     RtpHeader* rtpHeader = mRtpPacket.mRtpHeadr;
 
-    const uint8_t *buf = frame->mFrame;
-    int len = frame->mFrameSize;
+    T_H265_NALU nalu = frame->getVideoFrame()->getNalu()->nalu.h265Nalu;
+
+    const uint8_t *buf = nalu.buf + nalu.startCodeLen;
+    int len = nalu.len - nalu.startCodeLen;
+
+//    static FILE *fp1 = fopen("out.h265", "wb");
+//    fwrite(nalu.buf, 1, nalu.len, fp1);
 
     int rtp_payload_size   = RTP_MAX_PKT_SIZE - RTP_HEVC_HEADERS_SIZE;
     int nal_type           = (buf[0] >> 1) & 0x3F;
 // printf("%s line=%d nal_type=%d len=%d mTimestamp=%d\n", __FUNCTION__, __LINE__, nal_type, len, mTimestamp);
     //长度<MTU直接打包RTP发送
     /* send it as one single NAL unit? */
-    if(frame->mFrameSize <= RTP_MAX_PKT_SIZE)
+    if(len <= RTP_MAX_PKT_SIZE)
     {
-        memcpy(rtpHeader->payload, frame->mFrame, frame->mFrameSize);
-        mRtpPacket.mSize = frame->mFrameSize;
+        memcpy(rtpHeader->payload, buf, len);
+        mRtpPacket.mSize = len;
         sendRtpPacket(&mRtpPacket);
         mSeq++;
 

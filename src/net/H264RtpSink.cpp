@@ -46,13 +46,20 @@ std::string H264RtpSink::getAttribute()
 
 void H264RtpSink::handleFrame(AVFrame* frame)
 {
+    
     RtpHeader* rtpHeader = mRtpPacket.mRtpHeadr;
-    uint8_t naluType = frame->mFrame[0];
+    
+    T_H264_NALU nalu = frame->getVideoFrame()->getNalu()->nalu.h264Nalu;
 
-    if(frame->mFrameSize <= RTP_MAX_PKT_SIZE)
+    const uint8_t *buf = nalu.buf + nalu.startcodeprefix_len;
+    int len = nalu.len - nalu.startcodeprefix_len;
+
+    uint8_t naluType = buf[0];
+// printf("%s line=%d naluType=%d \n", __FUNCTION__, __LINE__, naluType & 0x1F);
+    if(len <= RTP_MAX_PKT_SIZE)
     {
-        memcpy(rtpHeader->payload, frame->mFrame, frame->mFrameSize);
-        mRtpPacket.mSize = frame->mFrameSize;
+        memcpy(rtpHeader->payload, buf, len);
+        mRtpPacket.mSize = len;
         sendRtpPacket(&mRtpPacket);
         mSeq++;
 
@@ -61,8 +68,8 @@ void H264RtpSink::handleFrame(AVFrame* frame)
     }
     else
     {
-        int pktNum = frame->mFrameSize / RTP_MAX_PKT_SIZE;       // 有几个完整的包
-        int remainPktSize = frame->mFrameSize % RTP_MAX_PKT_SIZE; // 剩余不完整包的大小
+        int pktNum = len / RTP_MAX_PKT_SIZE;       // 有几个完整的包
+        int remainPktSize = len % RTP_MAX_PKT_SIZE; // 剩余不完整包的大小
         int i, pos = 1;
 
         /* 发送完整的包 */
@@ -91,7 +98,7 @@ void H264RtpSink::handleFrame(AVFrame* frame)
             else if (remainPktSize == 0 && i == pktNum - 1) //最后一包数据
                 rtpHeader->payload[1] |= 0x40; // end
 
-            memcpy(rtpHeader->payload+2, frame->mFrame+pos, RTP_MAX_PKT_SIZE);
+            memcpy(rtpHeader->payload+2, buf+pos, RTP_MAX_PKT_SIZE);
             mRtpPacket.mSize = RTP_MAX_PKT_SIZE+2;
             sendRtpPacket(&mRtpPacket);
 
@@ -106,7 +113,7 @@ void H264RtpSink::handleFrame(AVFrame* frame)
             rtpHeader->payload[1] = naluType & 0x1F;
             rtpHeader->payload[1] |= 0x40; //end
 
-            memcpy(rtpHeader->payload+2, frame->mFrame+pos, remainPktSize);
+            memcpy(rtpHeader->payload+2, buf+pos, remainPktSize);
             mRtpPacket.mSize = remainPktSize+2;
             sendRtpPacket(&mRtpPacket);
 

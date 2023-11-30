@@ -1,86 +1,86 @@
-#include "base/ThreadPool.h"
-#include "base/Logging.h"
-#include "base/New.h"
+// #include "base/ThreadPool.h"
+// #include "base/Logging.h"
+// #include "base/New.h"
 
-ThreadPool* ThreadPool::createNew(int num)
-{
-    return new ThreadPool(num);
-    // return New<ThreadPool>::allocate(num);
-}
+// ThreadPool* ThreadPool::createNew(int num)
+// {
+//     return new ThreadPool(num);
+//     // return New<ThreadPool>::allocate(num);
+// }
 
-ThreadPool::ThreadPool(int num) :
-    mThreads(num),
-    mQuit(false)
-{
-    mMutex = Mutex::createNew();
-    mCondition = Condition::createNew();
+// ThreadPool::ThreadPool(int num) :
+//     mThreads(num),
+//     mQuit(false)
+// {
+//     mMutex = Mutex::createNew();
+//     mCondition = Condition::createNew();
 
-    createThreads();
-}
+//     createThreads();
+// }
 
-ThreadPool::~ThreadPool()
-{
-    cancelThreads();
-    delete mMutex;
-    delete mCondition;
-    // Delete::release(mMutex);
-    // Delete::release(mCondition);
-}
+// ThreadPool::~ThreadPool()
+// {
+//     cancelThreads();
+//     delete mMutex;
+//     delete mCondition;
+//     // Delete::release(mMutex);
+//     // Delete::release(mCondition);
+// }
 
-void ThreadPool::addTask(ThreadPool::Task& task)
-{
-    MutexLockGuard mutexLockGuard(mMutex);
-    mTaskQueue.push(task);
-    mCondition->signal();
-}
+// void ThreadPool::addTask(ThreadPool::Task& task)
+// {
+//     MutexLockGuard mutexLockGuard(mMutex);
+//     mTaskQueue.push(task);
+//     mCondition->signal();
+// }
 
-void ThreadPool::handleTask()
-{
-    while(mQuit != true)
-    {
-        Task task;
-        {
-            MutexLockGuard mutexLockGuard(mMutex);
-            if(mTaskQueue.empty())
-                mCondition->wait(mMutex);
+// void ThreadPool::handleTask()
+// {
+//     while(mQuit != true)
+//     {
+//         Task task;
+//         {
+//             MutexLockGuard mutexLockGuard(mMutex);
+//             if(mTaskQueue.empty())
+//                 mCondition->wait(mMutex);
         
-            if(mQuit == true)
-                break;
+//             if(mQuit == true)
+//                 break;
 
-            if(mTaskQueue.empty())
-                continue;
+//             if(mTaskQueue.empty())
+//                 continue;
 
-            task = mTaskQueue.front();
+//             task = mTaskQueue.front();
 
-            mTaskQueue.pop();
-        }
+//             mTaskQueue.pop();
+//         }
 
-        task.handle();
-    }
-}
+//         task.handle();
+//     }
+// }
 
-void ThreadPool::createThreads()
-{
-    MutexLockGuard mutexLockGuard(mMutex);
+// void ThreadPool::createThreads()
+// {
+//     MutexLockGuard mutexLockGuard(mMutex);
 
-    for(std::vector<MThread>::iterator it = mThreads.begin(); it != mThreads.end(); ++it)
-        (*it).start(this);
-}
+//     for(std::vector<MThread>::iterator it = mThreads.begin(); it != mThreads.end(); ++it)
+//         (*it).start(this);
+// }
 
-void ThreadPool::cancelThreads()
-{
-    MutexLockGuard mutexLockGuard(mMutex);
+// void ThreadPool::cancelThreads()
+// {
+//     MutexLockGuard mutexLockGuard(mMutex);
 
-    mQuit = true;
-    mCondition->broadcast();
-    for(std::vector<MThread>::iterator it = mThreads.begin(); it != mThreads.end(); ++it)
-        (*it).join();
+//     mQuit = true;
+//     mCondition->broadcast();
+//     for(std::vector<MThread>::iterator it = mThreads.begin(); it != mThreads.end(); ++it)
+//         (*it).join();
 
-    mThreads.clear();
-}
+//     mThreads.clear();
+// }
 
-void ThreadPool::MThread::run(void* arg)
-{
-    ThreadPool* threadPool = (ThreadPool*)arg;
-    threadPool->handleTask();    
-}
+// void ThreadPool::MThread::run(void* arg)
+// {
+//     ThreadPool* threadPool = (ThreadPool*)arg;
+//     threadPool->handleTask();    
+// }

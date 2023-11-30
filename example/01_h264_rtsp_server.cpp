@@ -8,7 +8,7 @@
 #include "net/RtspServer.h"
 #include "net/MediaSession.h"
 #include "net/InetAddress.h"
-#include "net/H264FileMediaSource.h"
+#include "mediasource/H264FileMediaSource.h"
 #include "net/H264RtpSink.h"
 
 int main(int argc, char* argv[])
@@ -23,8 +23,7 @@ int main(int argc, char* argv[])
     Logger::setLogLevel(Logger::LogWarning);
 
     EventScheduler* scheduler = EventScheduler::createNew(EventScheduler::POLLER_SELECT);
-    ThreadPool* threadPool = ThreadPool::createNew(2);
-    UsageEnvironment* env = UsageEnvironment::createNew(scheduler, threadPool);
+    UsageEnvironment* env = UsageEnvironment::createNew(scheduler);
 
     Ipv4Address ipAddr("0.0.0.0", 8554);
     RtspServer* server = RtspServer::createNew(env, ipAddr);

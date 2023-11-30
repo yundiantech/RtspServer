@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
     //EventScheduler* scheduler = EventScheduler::createNew(EventScheduler::POLLER_EPOLL);
 
     /* 创建环境变量 */
-    UsageEnvironment* env = UsageEnvironment::createNew(scheduler, NULL);
+    UsageEnvironment* env = UsageEnvironment::createNew(scheduler);
 
     /* 创建并添加IO事件 */
     IOEvent* ioEvent = IOEvent::createNew(0, NULL); //监听标准输入

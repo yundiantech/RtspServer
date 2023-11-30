@@ -1,14 +1,15 @@
 V4L2_SUPPORT=n
 ALSA_SUPPORT=n
 
-CROSS_COMPILE	=
+# CROSS_COMPILE	= mips-linux-uclibc-gnu-
 CXX   			= $(CROSS_COMPILE)g++
 
 TOR_DIR 	= $(shell pwd)
 SRC_DIR 	= $(TOR_DIR)/src
 OBJS_PATH 	= $(TOR_DIR)/objs
 
-CXX_FLAGS 	= -O2 -g -I$(TOR_DIR)/src
+CXX_FLAGS 	= -g -std=c++11 -I$(TOR_DIR)/src 
+# CXX_FLAGS 	= -O2 -std=c++11 -I$(TOR_DIR)/src 
 
 LD_FLAGS 	= -lpthread -lrt
 
@@ -24,16 +25,22 @@ endif
 
 SRC_BASE		= $(shell find $(SRC_DIR)/base -name *.cpp)
 SRC_NET			= $(shell find $(SRC_DIR)/net -name *.cpp)
+SRC_MEDIASOURCE	= $(shell find $(SRC_DIR)/mediasource -name *.cpp)
+SRC_FRAME		= $(shell find $(SRC_DIR)/frame -name *.cpp)
 SRC_EXTEND_V4L2	= $(shell find $(SRC_DIR)/extend/v4l2 -name *.cpp)
 SRC_EXTEND_ALSA	= $(shell find $(SRC_DIR)/extend/alsa -name *.cpp)
 
 SRC_BASE_NODIR			= $(notdir $(wildcard $(SRC_BASE)))
 SRC_NET_NODIR			= $(notdir $(wildcard $(SRC_NET)))
+SRC_MEDIASOURCE_NODIR	= $(notdir $(wildcard $(SRC_MEDIASOURCE)))
+SRC_FRAME_NODIR			= $(notdir $(wildcard $(SRC_FRAME)))
 SRC_EXTEND_V4L2_NODIR	= $(notdir $(wildcard $(SRC_EXTEND_V4L2)))
 SRC_EXTEND_ALSA_NODIR	= $(notdir $(wildcard $(SRC_EXTEND_ALSA)))
 
 OBJS_BASE			= $(patsubst %.cpp,$(OBJS_PATH)/%.o,$(SRC_BASE_NODIR))
 OBJS_NET			= $(patsubst %.cpp,$(OBJS_PATH)/%.o,$(SRC_NET_NODIR))
+OBJS_MEDIASOURCE	= $(patsubst %.cpp,$(OBJS_PATH)/%.o,$(SRC_MEDIASOURCE_NODIR))
+OBJS_FRAME			= $(patsubst %.cpp,$(OBJS_PATH)/%.o,$(SRC_FRAME_NODIR))
 OBJS_EXTEND_V4L2	= $(patsubst %.cpp,$(OBJS_PATH)/%.o,$(SRC_EXTEND_V4L2_NODIR))
 OBJS_EXTEND_ALSA	= $(patsubst %.cpp,$(OBJS_PATH)/%.o,$(SRC_EXTEND_ALSA_NODIR))
 
@@ -64,7 +71,8 @@ TARGET_TEST_EXAMPLE_ALSA_RTSP_SERVER		= $(TOR_DIR)/example/alsa_rtsp_server
 TARGET_TEST_EXAMPLE_MYEXAMPLE				= $(TOR_DIR)/example/MyExample
 
 
-all: MKAE_DIR TARGET_TEST TARGET_EXAMPLE
+# all: MKAE_DIR TARGET_TEST TARGET_EXAMPLE
+all: MKAE_DIR TARGET_EXAMPLE
 
 MKAE_DIR:
 	@-mkdir -p $(OBJS_PATH)
@@ -101,22 +109,22 @@ endif
 
 
 
-$(TARGET_TEST_EXAMPLE_H264_RTSP_SERVER) : $(OBJ_EXAMPLE_H264_RTSP_SERVER) $(OBJS_BASE) $(OBJS_NET)
+$(TARGET_TEST_EXAMPLE_H264_RTSP_SERVER) : $(OBJ_EXAMPLE_H264_RTSP_SERVER) $(OBJS_BASE) $(OBJS_NET) $(OBJS_MEDIASOURCE) $(OBJS_FRAME)
 	$(CXX) $^ -o $@ $(LD_FLAGS) $(CXX_FLAGS)
 
-$(TARGET_TEST_EXAMPLE_AAC_RTSP_SERVER) : $(OBJ_EXAMPLE_AAC_RTSP_SERVER) $(OBJS_BASE) $(OBJS_NET)
+$(TARGET_TEST_EXAMPLE_AAC_RTSP_SERVER) : $(OBJ_EXAMPLE_AAC_RTSP_SERVER) $(OBJS_BASE) $(OBJS_NET) $(OBJS_MEDIASOURCE) $(OBJS_FRAME)
 	$(CXX) $^ -o $@ $(LD_FLAGS) $(CXX_FLAGS)
 
-$(TARGET_TEST_EXAMPLE_H264_AAC_RTSP_SERVER) : $(OBJ_EXAMPLE_H264_AAC_RTSP_SERVER) $(OBJS_BASE) $(OBJS_NET)
+$(TARGET_TEST_EXAMPLE_H264_AAC_RTSP_SERVER) : $(OBJ_EXAMPLE_H264_AAC_RTSP_SERVER) $(OBJS_BASE) $(OBJS_NET) $(OBJS_MEDIASOURCE) $(OBJS_FRAME)
 	$(CXX) $^ -o $@ $(LD_FLAGS) $(CXX_FLAGS)
 
-$(TARGET_TEST_EXAMPLE_V4L2_RTSP_SERVER) : $(OBJ_EXAMPLE_V4L2_RTSP_SERVER) $(OBJS_BASE) $(OBJS_NET) $(OBJS_EXTEND_V4L2)
+$(TARGET_TEST_EXAMPLE_V4L2_RTSP_SERVER) : $(OBJ_EXAMPLE_V4L2_RTSP_SERVER) $(OBJS_BASE) $(OBJS_NET) $(OBJS_MEDIASOURCE) $(OBJS_FRAME) $(OBJS_EXTEND_V4L2)
 	$(CXX) $^ -o $@ $(LD_FLAGS) $(CXX_FLAGS)
 
-$(TARGET_TEST_EXAMPLE_ALSA_RTSP_SERVER) : $(OBJ_EXAMPLE_ALSA_RTSP_SERVER) $(OBJS_BASE) $(OBJS_NET) $(OBJS_EXTEND_ALSA)
+$(TARGET_TEST_EXAMPLE_ALSA_RTSP_SERVER) : $(OBJ_EXAMPLE_ALSA_RTSP_SERVER) $(OBJS_BASE) $(OBJS_NET) $(OBJS_MEDIASOURCE) $(OBJS_FRAME) $(OBJS_EXTEND_ALSA)
 	$(CXX) $^ -o $@ $(LD_FLAGS) $(CXX_FLAGS)
 
-$(TARGET_TEST_EXAMPLE_MYEXAMPLE) : $(OBJ_EXAMPLE_MYEXAMPLE) $(OBJS_BASE) $(OBJS_NET)
+$(TARGET_TEST_EXAMPLE_MYEXAMPLE) : $(OBJ_EXAMPLE_MYEXAMPLE) $(OBJS_BASE) $(OBJS_NET) $(OBJS_MEDIASOURCE) $(OBJS_FRAME) $(OBJS_PATH)/RtspStreamManager.o
 	$(CXX) $^ -o $@ $(LD_FLAGS) $(CXX_FLAGS)
 
 $(OBJS_PATH)/%.o : $(TOR_DIR)/example/%.cpp
@@ -127,11 +135,23 @@ $(OBJS_PATH)/%.o : $(SRC_DIR)/base/%.cpp
 	$(CXX) -c -o $@ $< $(CXX_FLAGS)
 $(OBJS_PATH)/%.o : $(SRC_DIR)/net/%.cpp
 	$(CXX) -c -o $@ $< $(CXX_FLAGS)
+$(OBJS_PATH)/%.o : $(SRC_DIR)/mediasource/%.cpp
+	$(CXX) -c -o $@ $< $(CXX_FLAGS)
+$(OBJS_PATH)/%.o : $(SRC_DIR)/mediasource/h264/%.cpp
+	$(CXX) -c -o $@ $< $(CXX_FLAGS)
+$(OBJS_PATH)/%.o : $(SRC_DIR)/mediasource/aac/%.cpp
+	$(CXX) -c -o $@ $< $(CXX_FLAGS) 
+$(OBJS_PATH)/%.o : $(SRC_DIR)/frame/%.cpp
+	$(CXX) -c -o $@ $< $(CXX_FLAGS)
+$(OBJS_PATH)/%.o : $(SRC_DIR)/frame/nalu/%.cpp
+	$(CXX) -c -o $@ $< $(CXX_FLAGS)
 $(OBJS_PATH)/%.o : $(SRC_DIR)/net/poller/%.cpp
 	$(CXX) -c -o $@ $< $(CXX_FLAGS)
 $(OBJS_PATH)/%.o : $(SRC_DIR)/extend/alsa/%.cpp
 	$(CXX) -c -o $@ $< $(CXX_FLAGS)
 $(OBJS_PATH)/%.o : $(SRC_DIR)/extend/v4l2/%.cpp
+	$(CXX) -c -o $@ $< $(CXX_FLAGS)
+$(OBJS_PATH)/RtspStreamManager.o : $(SRC_DIR)/RtspStreamManager.cpp
 	$(CXX) -c -o $@ $< $(CXX_FLAGS)
 
 
@@ -150,3 +170,4 @@ clean:
 	rm -rf $(TARGET_TEST_EXAMPLE_H264_AAC_RTSP_SERVER)
 	rm -rf $(TARGET_TEST_EXAMPLE_V4L2_RTSP_SERVER)
 	rm -rf $(TARGET_TEST_EXAMPLE_ALSA_RTSP_SERVER)
+	rm -rf $(TARGET_TEST_EXAMPLE_MYEXAMPLE)

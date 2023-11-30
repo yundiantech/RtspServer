@@ -52,21 +52,34 @@ void RtpSink::sendRtpPacket(RtpPacket* packet)
         
 }
 
+// void RtpSink::timeoutCallback(void* arg)
+// {
+//     RtpSink* rtpSink = (RtpSink*)arg;
+
+//     rtpSink->mMediaSource->readFrame(); //从文件读取流
+
+//     std::shared_ptr<AVFrame> frame = rtpSink->mMediaSource->getFrame();
+//     if(frame == nullptr || frame.get() == nullptr)
+//     { 
+//         return;
+//     }
+ 
+//     rtpSink->handleFrame(frame.get());
+// }
+
 void RtpSink::timeoutCallback(void* arg)
 {
     RtpSink* rtpSink = (RtpSink*)arg;
 
-    rtpSink->mMediaSource->readFrame(); //从文件读取流
-
-    AVFrame* frame = rtpSink->mMediaSource->getFrame();
-    if(!frame)
+    // rtpSink->mMediaSource->readFrame(); //从文件读取流
+//  printf("%s line=%d \n", __FUNCTION__, __LINE__);
+    std::shared_ptr<AVFrame> frame = rtpSink->mMediaSource->getFrame();
+    if(frame == nullptr || frame.get() == nullptr)
     { 
         return;
     }
-
-    rtpSink->handleFrame(frame);
-
-    rtpSink->mMediaSource->putFrame(frame);
+//  printf("%s line=%d \n", __FUNCTION__, __LINE__);
+    rtpSink->handleFrame(frame.get());
 }
 
 void RtpSink::start(int ms)

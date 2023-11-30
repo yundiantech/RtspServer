@@ -76,7 +76,11 @@ std::string AACRtpSink::getAttribute()
 void AACRtpSink::handleFrame(AVFrame* frame)
 {
     RtpHeader* rtpHeader = mRtpPacket.mRtpHeadr;
-    int frameSize = frame->mFrameSize-7; //去掉aac头部
+
+    AACFramePtr aacFrame = frame->getAudioFrame();
+
+    uint8_t *buf = aacFrame->getBuffer();
+    int frameSize = aacFrame->getSize() - ADTS_HEADER_LENTH; //去掉aac头部
 
     rtpHeader->payload[0] = 0x00;
     rtpHeader->payload[1] = 0x10;
@@ -84,7 +88,7 @@ void AACRtpSink::handleFrame(AVFrame* frame)
     rtpHeader->payload[3] = (frameSize & 0x1F) << 3; //低5位
 
     /* 去掉aac的头部 */
-    memcpy(rtpHeader->payload+4, frame->mFrame+7, frameSize);
+    memcpy(rtpHeader->payload+4, buf + ADTS_HEADER_LENTH, frameSize);
     mRtpPacket.mSize = frameSize + 4;
 
     sendRtpPacket(&mRtpPacket);
