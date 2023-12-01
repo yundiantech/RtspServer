@@ -22,13 +22,13 @@ public:
     void setSendFrameCallbackFunc(std::function<void (RtpPacket*)> func){m_sendframe_callback_func = func;}
 
 protected:
-    virtual void handleFrame(AVFrame* frame) = 0;
+    virtual void handleFrame(MediaSource::AVFrame* frame) = 0;
     void sendRtpPacket(RtpPacket* packet);
     void start(int ms);
     void stop();
 
 private:
-    void onFrameGetted(void *sender, std::shared_ptr<AVFrame> frame); //从mediasource获取的frame数据
+    void onFrameGetted(void *sender, std::shared_ptr<MediaSource::AVFrame> frame); //从mediasource获取的frame数据
 
 protected:
     MediaSource* mMediaSource;

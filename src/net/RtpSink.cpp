@@ -47,7 +47,7 @@ void RtpSink::sendRtpPacket(RtpPacket* packet)
         
 }
 
-void RtpSink::onFrameGetted(void *sender, std::shared_ptr<AVFrame> frame)
+void RtpSink::onFrameGetted(void *sender, std::shared_ptr<MediaSource::AVFrame> frame)
 {
 //  printf("%s line=%d \n", __FUNCTION__, __LINE__);
     if(frame == nullptr || frame.get() == nullptr)

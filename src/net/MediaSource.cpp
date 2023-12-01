@@ -55,10 +55,10 @@ void MediaSource::inputFrame(AACFramePtr audioFrame)
     m_con_frames.notify_all();
 }
 
-std::shared_ptr<AVFrame> MediaSource::getFrame()
+std::shared_ptr<MediaSource::AVFrame> MediaSource::getFrame()
 {
     std::unique_lock<std::mutex> lck(m_mutex_frames);
-    std::shared_ptr<AVFrame> frame = nullptr;
+    std::shared_ptr<MediaSource::AVFrame> frame = nullptr;
 
     while (mAVFrameQueue.empty())
     {
@@ -78,7 +78,7 @@ void MediaSource::handleFramesFunc()
 {
     while (1)
     {
-        std::shared_ptr<AVFrame> frame = getFrame();
+        std::shared_ptr<MediaSource::AVFrame> frame = getFrame();
 
         if(frame == nullptr || frame.get() == nullptr)
         { 

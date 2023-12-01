@@ -10,49 +10,43 @@
 #include "frame/AACFrame.h"
 #include "frame/VideoEncodedFrame.h"
 
-class AVFrame
-{
-public:
-    enum AVFrameType
-    {
-        AVFrameType_VIDEO = 0,
-        AVFrameType_AUDIO
-    };
-
-    AVFrame(){}
-
-    ~AVFrame(){}
-
-    void setFrame(VideoEncodedFramePtr frame)
-    {
-        mType = AVFrameType_VIDEO;
-        mVideoFrame = frame;
-    }
-
-    void setFrame(AACFramePtr frame)
-    {
-        mType = AVFrameType_AUDIO;
-        mAudioFrame = frame;
-    }
-
-    VideoEncodedFramePtr getVideoFrame(){return mVideoFrame;}
-    AACFramePtr getAudioFrame(){return mAudioFrame;}
-
-    // //这三个变量没用了，用到的地方要改掉
-    // uint8_t* mBuffer;
-    // uint8_t* mFrame;
-    // int mFrameSize;
-
-private:
-    AVFrameType mType;
-    VideoEncodedFramePtr mVideoFrame;
-    AACFramePtr mAudioFrame;
-
-};
-
 class MediaSource
 {
 public:
+    class AVFrame
+    {
+    public:
+        enum AVFrameType
+        {
+            AVFrameType_VIDEO = 0,
+            AVFrameType_AUDIO
+        };
+
+        AVFrame(){}
+
+        ~AVFrame(){}
+
+        void setFrame(VideoEncodedFramePtr frame)
+        {
+            mType = AVFrameType_VIDEO;
+            mVideoFrame = frame;
+        }
+
+        void setFrame(AACFramePtr frame)
+        {
+            mType = AVFrameType_AUDIO;
+            mAudioFrame = frame;
+        }
+
+        VideoEncodedFramePtr getVideoFrame(){return mVideoFrame;}
+        AACFramePtr getAudioFrame(){return mAudioFrame;}
+
+    private:
+        AVFrameType mType;
+        VideoEncodedFramePtr mVideoFrame;
+        AACFramePtr mAudioFrame;
+    };
+    
     class EventHandle
     {
     public:

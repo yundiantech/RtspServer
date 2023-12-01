@@ -44,7 +44,7 @@ std::string H264RtpSink::getAttribute()
     return std::string(buf);
 }
 
-void H264RtpSink::handleFrame(AVFrame* frame)
+void H264RtpSink::handleFrame(MediaSource::AVFrame* frame)
 {
     
     RtpHeader* rtpHeader = mRtpPacket.mRtpHeadr;

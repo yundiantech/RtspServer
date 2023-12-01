@@ -1,0 +1,9 @@
+build/
+objs/
+test/test_*
+example/aac_rtsp_server
+example/h264_aac_rtsp_server
+example/h264_rtsp_server
+example/MyExample
+example/test
+

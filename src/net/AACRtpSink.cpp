@@ -73,7 +73,7 @@ std::string AACRtpSink::getAttribute()
     return std::string(buf);
 }
 
-void AACRtpSink::handleFrame(AVFrame* frame)
+void AACRtpSink::handleFrame(MediaSource::AVFrame* frame)
 {
     RtpHeader* rtpHeader = mRtpPacket.mRtpHeadr;
 
