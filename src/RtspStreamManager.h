@@ -12,7 +12,7 @@
 #include "net/RtspServer.h"
 #include "net/MediaSession.h"
 #include "net/InetAddress.h"
-#include "mediasource/MediaSource.h"
+#include "net/MediaSource.h"
 #include "net/AACRtpSink.h"
 
 class RtspStreamManager

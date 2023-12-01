@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <functional>
 
-#include "mediasource/MediaSource.h"
+#include "MediaSource.h"
 #include "net/Event.h"
 #include "net/UsageEnvironment.h"
 #include "net/Rtp.h"

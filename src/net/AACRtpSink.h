@@ -3,7 +3,7 @@
 
 #include "net/UsageEnvironment.h"
 #include "net/RtpSink.h"
-#include "mediasource/MediaSource.h"
+#include "MediaSource.h"
 
 class AACRtpSink : public RtpSink
 {
