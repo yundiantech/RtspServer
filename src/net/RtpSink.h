@@ -10,10 +10,10 @@
 #include "net/Rtp.h"
 
 
-class RtpSink
+class RtpSink : public MediaSource::EventHandle
 {
 public:
-    RtpSink(UsageEnvironment* env, MediaSource* mediaSource, int payloadType);
+    RtpSink(MediaSource* mediaSource, int payloadType);
     virtual ~RtpSink();
 
     virtual std::string getMediaDescription(uint16_t port) = 0;
@@ -28,13 +28,12 @@ protected:
     void stop();
 
 private:
-    static void timeoutCallback(void*);
+    void onFrameGetted(void *sender, std::shared_ptr<AVFrame> frame); //从mediasource获取的frame数据
 
 protected:
-    UsageEnvironment* mEnv;
     MediaSource* mMediaSource;
 
-    std::function<void (RtpPacket*)> m_sendframe_callback_func = nullptr; //发送数据回调函数
+    std::function<void (RtpPacket*)> m_sendframe_callback_func = nullptr; //向上发送RTP数据回调函数
 
     uint8_t mCsrcLen;
     uint8_t mExtension;
@@ -46,9 +45,6 @@ protected:
     uint32_t mTimestamp;
     uint32_t mSSRC;
 
-private:
-    TimerEvent* mTimerEvent;
-    Timer::TimerId mTimerId;
 };
 
 #endif //_MEDIA_SINK_H_

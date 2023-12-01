@@ -7,9 +7,9 @@
 class H264RtpSink : public RtpSink
 {
 public:
-    static H264RtpSink* createNew(UsageEnvironment* env, MediaSource* mediaSource);
+    static H264RtpSink* createNew(MediaSource* mediaSource);
     
-    H264RtpSink(UsageEnvironment* env, MediaSource* mediaSource);
+    H264RtpSink(MediaSource* mediaSource);
     virtual ~H264RtpSink();
 
     virtual std::string getMediaDescription(uint16_t port);

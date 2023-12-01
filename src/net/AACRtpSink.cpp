@@ -6,14 +6,14 @@
 #include "base/Logging.h"
 #include "base/New.h"
 
-AACRtpSink* AACRtpSink::createNew(UsageEnvironment* env, MediaSource* mediaSource)
+AACRtpSink* AACRtpSink::createNew(MediaSource* mediaSource)
 {
-    return new AACRtpSink(env, mediaSource, RTP_PAYLOAD_TYPE_AAC);
-    // return New<AACRtpSink>::allocate(env, mediaSource, RTP_PAYLOAD_TYPE_AAC);
+    return new AACRtpSink(mediaSource, RTP_PAYLOAD_TYPE_AAC);
+    // return New<AACRtpSink>::allocate(mediaSource, RTP_PAYLOAD_TYPE_AAC);
 }
 
-AACRtpSink::AACRtpSink(UsageEnvironment* env, MediaSource* mediaSource, int payloadType) :
-    RtpSink(env, mediaSource, payloadType),
+AACRtpSink::AACRtpSink(MediaSource* mediaSource, int payloadType) :
+    RtpSink(mediaSource, payloadType),
     mSampleRate(44100),
     mChannels(2),
     mFps(mediaSource->getFps())

@@ -9,17 +9,17 @@
 
 #define RTP_HEVC_HEADERS_SIZE 3
 
-H265RtpSink* H265RtpSink::createNew(UsageEnvironment* env, MediaSource* mediaSource)
+H265RtpSink* H265RtpSink::createNew(MediaSource* mediaSource)
 {
     if(!mediaSource)
         return NULL;
 
-    return new H265RtpSink(env, mediaSource);
-    // return New<H265RtpSink>::allocate(env, mediaSource);
+    return new H265RtpSink(mediaSource);
+    // return New<H265RtpSink>::allocate(mediaSource);
 }
 
-H265RtpSink::H265RtpSink(UsageEnvironment* env, MediaSource* mediaSource) :
-    RtpSink(env, mediaSource, RTP_PAYLOAD_TYPE_H264),
+H265RtpSink::H265RtpSink(MediaSource* mediaSource) :
+    RtpSink(mediaSource, RTP_PAYLOAD_TYPE_H264),
     mClockRate(90000),
     mFps(mediaSource->getFps())
 {

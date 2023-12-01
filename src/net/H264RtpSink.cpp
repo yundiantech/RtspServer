@@ -5,17 +5,17 @@
 #include "base/Logging.h"
 #include "base/New.h"
 
-H264RtpSink* H264RtpSink::createNew(UsageEnvironment* env, MediaSource* mediaSource)
+H264RtpSink* H264RtpSink::createNew(MediaSource* mediaSource)
 {
     if(!mediaSource)
         return NULL;
 
-    return new H264RtpSink(env, mediaSource);
-    // return New<H264RtpSink>::allocate(env, mediaSource);
+    return new H264RtpSink(mediaSource);
+    // return New<H264RtpSink>::allocate(mediaSource);
 }
 
-H264RtpSink::H264RtpSink(UsageEnvironment* env, MediaSource* mediaSource) :
-    RtpSink(env, mediaSource, RTP_PAYLOAD_TYPE_H264),
+H264RtpSink::H264RtpSink(MediaSource* mediaSource) :
+    RtpSink(mediaSource, RTP_PAYLOAD_TYPE_H264),
     mClockRate(90000),
     mFps(mediaSource->getFps())
 {

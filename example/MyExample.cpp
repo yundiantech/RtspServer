@@ -1,8 +1,8 @@
 #include <iostream>
 
 #include "RtspStreamManager.h"
-#include "mediasource/h264/h264decoder.h"
-#include "mediasource/aac/AACReader.h"
+#include "frame/h264/h264decoder.h"
+#include "frame/aac/AACReader.h"
 
 #include <thread>
 
@@ -136,12 +136,15 @@ void readH265File(RtspStreamManager *stream_manager)
             /// 需要成功解码一帧后 才能获取到帧率
             uint64_t videoPts = (1000000 / frameRate * frameNum); //微秒
 // printf("%s line=%d %d\n", __FUNCTION__, __LINE__, videoPts);
+#if 1
             ///根据音频时间戳做同步。
-            // while (videoPts > audioPts || audioPts <= 0)
-            // {
-            //     usleep(5000);
-            // }
-            usleep(1000000 / frameRate);
+            while (videoPts > audioPts || audioPts <= 0)
+            {
+                mSleep(5);
+            }
+#else
+            mSleep(1000 / frameRate);
+#endif
 // printf("%s line=%d \n", __FUNCTION__, __LINE__);
             {
                 VideoEncodedFramePtr videoFrame = std::make_shared<VideoEncodedFrame>();
@@ -272,12 +275,15 @@ void readH264File(RtspStreamManager *stream_manager)
             /// 需要成功解码一帧后 才能获取到帧率
             uint64_t videoPts = (1000000 / frameRate * frameNum); //微秒
 // printf("%s line=%d %d\n", __FUNCTION__, __LINE__, videoPts);
-            ///根据音频时间戳做同步。
-            // while (videoPts > audioPts || audioPts <= 0)
-            // {
-            //     usleep(5000);
-            // }
-            usleep(1000000 / frameRate);
+#if 1
+            //根据音频时间戳做同步。
+            while (videoPts > audioPts || audioPts <= 0)
+            {
+                mSleep(5);
+            }
+#else
+            mSleep(1000 / frameRate);
+#endif
 // printf("%s line=%d \n", __FUNCTION__, __LINE__);
             {
                 VideoEncodedFramePtr videoFrame = std::make_shared<VideoEncodedFrame>();
@@ -324,10 +330,9 @@ void readAACFile(RtspStreamManager *stream_manager)
             std::shared_ptr<AACFrame> aacFrame = mAACReader->getNextFrame();
             if (aacFrame == NULL) break;
 
-//            audioPts += 1000000 / 43;
-            audioPts += 6000;
-
-            mSleep(6); 
+            int frame_pts = 1000000 / 43;
+            audioPts += frame_pts;
+            mSleep(frame_pts / 1000); 
 
             stream_manager->inputFrame(aacFrame);
         }

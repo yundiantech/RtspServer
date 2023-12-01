@@ -26,12 +26,14 @@ bool RtspStreamManager::start_server()
     Ipv4Address ipAddr("0.0.0.0", 8554);
     RtspServer* server = RtspServer::createNew(env, ipAddr);
     MediaSession* session = MediaSession::createNew("live");
-    m_video_source = H264FileMediaSource::createNew(env);
-    // RtpSink* videoRtpSink = H264RtpSink::createNew(env, m_video_source);
-    RtpSink* videoRtpSink = H265RtpSink::createNew(env, m_video_source);
-    m_audio_source = AACFileMeidaSource::createNew(env);
-    RtpSink* audioRtpSink = AACRtpSink::createNew(env, m_audio_source);
-
+    m_video_source = MediaSource::createNew();
+    m_video_source->setFps(26);
+    // RtpSink* videoRtpSink = H264RtpSink::createNew(m_video_source);
+    RtpSink* videoRtpSink = H265RtpSink::createNew(m_video_source);
+    m_audio_source = MediaSource::createNew();
+    m_audio_source->setFps(43);
+    RtpSink* audioRtpSink = AACRtpSink::createNew(m_audio_source);
+ 
     session->addRtpSink(MediaSession::TrackId0, videoRtpSink);
     session->addRtpSink(MediaSession::TrackId1, audioRtpSink);
     //session->startMulticast(); //多播

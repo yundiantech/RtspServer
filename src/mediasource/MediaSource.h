@@ -2,6 +2,7 @@
 #define _MEDIA_SOURCE_H_
 #include <queue>
 #include <mutex>
+#include <condition_variable>
 #include <stdint.h>
 
 #include "net/UsageEnvironment.h"
@@ -52,28 +53,35 @@ private:
 class MediaSource
 {
 public:
-    MediaSource(UsageEnvironment* env);
+    class EventHandle
+    {
+    public:
+        virtual void onFrameGetted(void *sender, std::shared_ptr<AVFrame> frame) = 0;
+    };
+public:
+    static MediaSource* createNew();
+
+    MediaSource();
     virtual ~MediaSource();
 
+    void setFps(int fps) { mFps = fps; }
     int getFps() const { return mFps; }
 
     void inputFrame(std::shared_ptr<AVFrame> frame);
     void inputFrame(VideoEncodedFramePtr videoFrame);
     void inputFrame(AACFramePtr audioFrame);
-    std::shared_ptr<AVFrame> getFrame();
- 
-    void setFps(int fps) { mFps = fps; }
-
-    // virtual void readFrame() = 0;
     
-protected:
-    UsageEnvironment* mEnv;
-    // AVFrame mAVFrames[DEFAULT_FRAME_NUM];
-    // std::queue<AVFrame*> mAVFrameInputQueue;
-    // std::queue<AVFrame*> mAVFrameOutputQueue;
-    // Mutex* mMutex;
+    void setEventHandle(EventHandle *handle){m_event_handle = handle;}
+    
+private:
+    std::shared_ptr<AVFrame> getFrame();
+    void handleFramesFunc();
+
+private:
+    EventHandle *m_event_handle = nullptr;
 
     int mFps;
+    std::condition_variable m_con_frames;
     std::mutex m_mutex_frames;
     std::queue<std::shared_ptr<AVFrame>> mAVFrameQueue;
 };
